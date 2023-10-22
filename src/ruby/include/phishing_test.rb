@@ -242,7 +242,32 @@ class Main < Sinatra::Base
         end
 
         # Lehrer
-        teacher
+        lul_teacher = @@lehrer_order
+        for mail_adress in lul_teacher do
+            token = RandomTag.generate(24)
+            neo4j_query(<<~END_OF_QUERY, :token => token)
+                CREATE (v:Phishing_Tokens {token: $token})
+                SET v.role = "sus"
+                SET v.level = "teacher"
+                SET v.clicked = false
+                SET v.input1 = false
+                SET v.input2 = false
+            END_OF_QUERY
+            deliver_mail do
+                to mail_adress
+                from PHISHING_SMTP_FROM
+                subject "Deine E-Mail Adresse wird gelöscht"
+    
+                StringIO.open do |io|
+                    io.puts "<p>Hallo!</p>"
+                    io.puts "<p>Du nutzt zurzeit deine E-Mail-Adresse unregelmäßig, weshalb Sie für eine <b>Löschung</b> markiert wurde und in den nächsten drei Tagen <b>gelöscht</b> werden soll.</p>"
+                    io.puts "<p>Bitte melde dich über diesen <a href='#{PHISHING_WEB_ROOT}/data_input/#{token}'>Link</a> im Dashboard deiner Schule an, um die Löschung abzubrechen.</p>"
+                    io.puts "<p>Viele Grüße<br>Deine Schule</p>"
+                    io.string
+                
+                end
+            end
+        end
     end
     post "/api/phishing_input" do
         data = parse_request_data(:required_keys => [:token])

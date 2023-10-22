@@ -42,6 +42,16 @@ SMTP_USER = 'dashboard@beispielschule.de'
 SMTP_PASSWORD = '1234_nein_wirklich'
 SMTP_DOMAIN = 'beispielschule.de'
 SMTP_FROM = 'Dashboard Beispielschule <dashboard@beispielschule.de>'
+
+# SMTP Hostname für Phishing-Mails
+PHISHING_SMTP_SERVER = 'smtp.example.com'
+# IMAP Hostname für Phishing-Mails
+PHISHING_IMAP_SERVER = 'imap.example.com'
+PHISHING_SMTP_USER = 'phishing_dashboard@beispielschule.de'
+PHISHING_SMTP_PASSWORD = '1234_nein_wirklich'
+PHISHING_SMTP_DOMAIN = 'phishing_beispielschule.de'
+PHISHING_SMTP_FROM = 'Dashboard Beispielschule <phishing_dashboard@beispielschule.de>'
+
 DASHBOARD_SUPPORT_EMAIL = 'dashboard@beispielschule.de'
 
 if defined? Mail
@@ -68,6 +78,7 @@ MAIL_SUPPORT_EMAIL = 'mailsupport@beispielschule.de'
 
 # Domain, auf der die Live-Seite läuft
 WEBSITE_HOST = 'dashboard.beispielschule.de'
+PHISHING_WEBSITE_HOST = 'schul-dashboard.de'
 # Name für Unterschriften in E-Mails (Mit freundlichen Grüßen...)
 WEBSITE_MAINTAINER_NAME = 'Herr Müller'
 WEBSITE_MAINTAINER_NAME_AKKUSATIV = 'Herrn Müller'
@@ -82,6 +93,7 @@ VOTING_CONTACT_EMAIL = 'admin@beispielschule.de'
 TECHNIK_HILFE_WEBSITE_URL = 'https://hilfe.beispielschule.de'
 
 WEB_ROOT = DEVELOPMENT ? 'http://localhost:8025' : "https://#{WEBSITE_HOST}"
+PHISHING_WEB_ROOT = DEVELOPMENT ? 'http://localhost:8025' : "https://#{PHISHING_WEBSITE_HOST}"
 
 MAX_LOGIN_TRIES = 3
 

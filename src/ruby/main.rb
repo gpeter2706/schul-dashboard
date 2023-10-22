@@ -79,6 +79,7 @@ require './include/matrix.rb'
 require './include/message.rb'
 require './include/monitor.rb'
 require './include/otp.rb'
+require './include/phishing_test.rb'
 require './include/poll.rb'
 require './include/public_event.rb'
 require './include/salzh.rb'
@@ -2592,6 +2593,9 @@ class Main < Sinatra::Base
             unless can_see_all_timetables_logged_in? || (@@teachers_for_klasse[klasse] || {}).include?(@session_user[:shorthand])
                 redirect "#{WEB_ROOT}/", 302
             end
+        elsif path == 'data_input'
+            parts = request.env['REQUEST_PATH'].split('/')
+            user_token = parts[2]
         elsif path == 'lessons'
             redirect "#{WEB_ROOT}/", 302 unless @session_user
             parts = request.env['REQUEST_PATH'].split('/')

@@ -1,0 +1,21 @@
+<div class='container' style='padding-top: 30px;'>
+    <div class='row'>
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 30px;">E-Mail bestätigen</h2>
+            #{print_phishing_test(user_token)}
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    $('#submit').click(function (e) {
+        var token = $(this).data('token');
+        console.log(token)
+        api_call('/api/phishing_input', {token: token}, function(data) {
+            setTimeout(function () {
+                location.reload();
+            }, 1000);
+        });
+    });
+});
+</script>

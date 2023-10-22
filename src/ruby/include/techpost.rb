@@ -205,7 +205,7 @@ class Main < Sinatra::Base
     
     post '/api/get_tech_problems_admin' do
         require_user_who_can_manage_tablets!
-        problems = neo4j_query(<<~END_OF_QUERY, :email => @session_user[:email]).map { |x| {:problem => x['v'], :email => x['u.email'], :femail => x['f.email']} }
+        problems = neo4j_query(<<~END_OF_QUERY).map { |x| {:problem => x['v'], :email => x['u.email'], :femail => x['f.email']} }
             MATCH (v:TechProblem)-[:BELONGS_TO]->(u:User)
             OPTIONAL MATCH (v:TechProblem)-[:WILL_BE_FIXED_BY]->(f:User)
             RETURN v, u.email, f.email;

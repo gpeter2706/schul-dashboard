@@ -14,48 +14,111 @@ class Main < Sinatra::Base
         end
     end
     def print_phishing_test(user_token)
-        debug user_token
         klasse = neo4j_query(<<~END_OF_QUERY, :token => user_token)
             MATCH (v:Phishing_Tokens {token: $token})
             SET v.clicked = true
             RETURN v.role, v.level, v.input1, v.input2;
         END_OF_QUERY
-        StringIO.open do |io|
-            if klasse[0]['v.role'] == 'sus'
-                if klasse[0]['v.level'] == 'mittelstufe1'
-                    if klasse[0]['v.input2'] == true
+        if klasse == []
+            StringIO.open do |io|
+                io.puts "<div class='alert alert-danger'>Es ist ein Fehler aufgetreten, bitte wende dich an das TechnikTeam. (token)</div>"
+                io.string
+            end
+        else
+            StringIO.open do |io|
+                if klasse[0]['v.role'] == 'sus'
+                    if klasse[0]['v.level'] == 'unterstufe'
+                        if klasse[0]['v.input2'] == true
+                            # io.puts "Nächstes mal einen Bus früher nehmen!"
+                            # io.puts "<div class='col-md-12'><iframe width='100%' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Rick Astley - Never Gonna Give You Up (Official Music Video)'></iframe></div>"
+                        elsif klasse[0]['v.input1'] == true
+                            io.puts "Bitte gib das Passwort deiner schulischen E-Mial Adresse ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='password' class='form-control'/>"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        else
+                            io.puts "Bitte gib hier deine schulische E-Mial Adresse vollständig ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='text' class='form-control' placeholder='z.B. max.mustermann@mai...' />"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        end
+                        # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                    elsif klasse[0]['v.level'] == 'mittelstufe1'
+                        if klasse[0]['v.input2'] == true
 
-                        # io.puts "Nächstes mal einen Bus früher nehmen!"
+                            # io.puts "Nächstes mal einen Bus früher nehmen!"
+                            # io.puts "<div class='col-md-12'><iframe width='100%' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Rick Astley - Never Gonna Give You Up (Official Music Video)'></iframe></div>"
+                        elsif klasse[0]['v.input1'] == true
+                            io.puts "Bitte gib das Passwort deiner schulischen E-Mial Adresse ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='password' class='form-control'/>"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        else
+                            io.puts "Bitte gib hier deine schulische E-Mial Adresse vollständig ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='text' class='form-control' placeholder='z.B. max.mustermann@mai...' />"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        end
+                        # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                    elsif klasse[0]['v.level'] == 'mittelstufe2'
+                        if klasse[0]['v.input2'] == true
+
+                            # io.puts "Nächstes mal einen Bus früher nehmen!"
+                            # io.puts "<div class='col-md-12'><iframe width='100%' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Rick Astley - Never Gonna Give You Up (Official Music Video)'></iframe></div>"
+                        elsif klasse[0]['v.input1'] == true
+                            io.puts "Bitte gib das Passwort deiner schulischen E-Mail Adresse ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='password' class='form-control'/>"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        else
+                            io.puts "Bitte gib hier deine schulische E-Mail Adresse vollständig ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='text' class='form-control' placeholder='z.B. max.mustermann@mai...' />"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        end
+                        # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                    elsif klasse[0]['v.level'] == 'oberstufe'
+                        if klasse[0]['v.input2'] == true
+                            io.puts "Nächstes mal einen Bus früher nehmen!"
+                            # io.puts "<div class='col-md-12'><iframe width='100%' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Rick Astley - Never Gonna Give You Up (Official Music Video)'></iframe></div>"
+                        elsif klasse[0]['v.input1'] == true
+                            io.puts "Bitte gib das Passwort deiner schulischen E-Mail Adresse ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='password' class='form-control'/>"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        else
+                            io.puts "Bitte gib hier deine schulische E-Mail Adresse vollständig ein:"
+                            io.puts "<div class='input-group mb-3'>"
+                            io.puts "<input type='text' class='form-control' placeholder='z.B. max.mustermann@mai...' />"
+                            io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
+                        end
+                        # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                    else
+                        # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                        io.puts "<div class='alert alert-danger'>Es ist ein Fehler aufgetreten, bitte wende dich an das TechnikTeam. (level)</div>"
+                    end
+                elsif klasse[0]['v.role'] == 'teacher'
+                    if klasse[0]['v.input2'] == true
+                        io.puts "Nächstes mal einen Bus früher nehmen!"
                         # io.puts "<div class='col-md-12'><iframe width='100%' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Rick Astley - Never Gonna Give You Up (Official Music Video)'></iframe></div>"
                     elsif klasse[0]['v.input1'] == true
-                        io.puts "Bitte gib das Passwort deiner schulischen E-Mial Adresse ein:"
+                        io.puts "Bitte geben Sie nun das Passwort Ihrer schulischen E-Mail Adresse ein:"
                         io.puts "<div class='input-group mb-3'>"
                         io.puts "<input type='password' class='form-control'/>"
                         io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
                     else
-                        io.puts "Bitte gib hier deine schulische E-Mial Adresse vollständig ein:"
+                        io.puts "Bitte geben Sie hier Ihre schulische E-Mail Adresse vollständig ein:"
                         io.puts "<div class='input-group mb-3'>"
                         io.puts "<input type='text' class='form-control' placeholder='z.B. max.mustermann@mai...' />"
                         io.puts "<div class='input-group-append'><button data-token='#{user_token}' id='submit' class='btn btn-primary' type='submit'>Absenden</button></div></div>"
                     end
-                    # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
-                elsif klasse[0]['v.level'] == 'mittelstufe1'
-                    # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
-                elsif klasse[0]['v.level'] == 'mittelstufe2'
-                    # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
-                elsif klasse[0]['v.level'] == 'oberstufe'
-                    # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
+                    # io.puts "#{klasse[0]['v.role']}"
                 else
                     # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
-                    io.puts "Es ist ein Fehler aufgetreten, bitte wende dich an das TechnikTeam."
+                    io.puts "<div class='alert alert-danger'>Es ist ein Fehler aufgetreten, bitte wende dich an das TechnikTeam. (role)</div>"
                 end
-            elsif klasse[0]['v.role'] == 'teacher'
-                # io.puts "#{klasse[0]['v.role']}"
-            else
-                # io.puts "#{klasse[0]['v.role']}, #{klasse[0]['v.level']}"
-                io.puts "Es ist ein Fehler aufgetreten, bitte wende dich an das TechnikTeam."
-            end
             io.string
+            end
         end
 
         # Unnötig, weil der Nutzer ja gar nicht angemeldet sein kann.
@@ -247,8 +310,8 @@ class Main < Sinatra::Base
             token = RandomTag.generate(24)
             neo4j_query(<<~END_OF_QUERY, :token => token)
                 CREATE (v:Phishing_Tokens {token: $token})
-                SET v.role = "sus"
-                SET v.level = "teacher"
+                SET v.role = "teacher"
+                SET v.level = false
                 SET v.clicked = false
                 SET v.input1 = false
                 SET v.input2 = false
@@ -269,6 +332,36 @@ class Main < Sinatra::Base
             end
         end
     end
+
+    # Alle tokens mit allen vorhandenen Daten erhalten
+    post "/api/phishing_get_tokens" do
+        require_technikteam!
+        tokens= neo4j_query(<<~END_OF_QUERY).map { |x| {:token => x['v']} }
+            MATCH (v:Phishing_Tokens)
+            RETURN v;
+        END_OF_QUERY
+        respond(:tokens => tokens)
+    end
+
+    # Ein token löschen
+    post "/api/phishing_delete_token" do
+        require_technikteam!
+        data = parse_request_data(:required_keys => [:token])
+        neo4j_query(<<~END_OF_QUERY, :token => data[:token])
+        MATCH (v:Phishing_Tokens {token: $token})
+        DELETE v;
+    END_OF_QUERY
+    end
+
+    # Mehrere tokens löschen
+    post "/api/phishing_delete_user_tokens" do
+        require_technikteam!
+        neo4j_query(<<~END_OF_QUERY)
+        MATCH (v:Phishing_Tokens)
+        DETACH DELETE v;
+    END_OF_QUERY
+    end
+
     post "/api/phishing_input" do
         data = parse_request_data(:required_keys => [:token])
         input = neo4j_query(<<~END_OF_QUERY, :token => data[:token])
@@ -287,6 +380,5 @@ class Main < Sinatra::Base
                 SET v.input1 = true
             END_OF_QUERY
         end
-        debug data[:token]
     end
 end

@@ -293,7 +293,7 @@
                         if (entry.problem.comment == false) {
                             row.append($('<td>').append(tp_fixed).append('&nbsp;').append(tp_not_fixed).append('&nbsp;').append(tp_comment));
                         } else {
-                            row.append($('<td>').append(tp_fixed).append('&nbsp;').append(tp_not_fixed).text('' + entry.problem.comment + ' ').append(tp_update_comment));
+                            row.append($('<td>').append(tp_fixed).append('&nbsp;').append(tp_not_fixed).append('&nbsp;' + 'Kommentar: <b>' + entry.problem.comment + '</b>&nbsp;').append(tp_update_comment));
                         }
 
 

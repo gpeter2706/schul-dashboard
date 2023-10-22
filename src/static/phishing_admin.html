@@ -3,15 +3,119 @@
     <div class='row'>
         <div class="col-md-12">
             <h2 style="margin-bottom: 30px;">Phishing Administration</h2>
-            <button class="btn btn-danger" id="generate_user_tokens">Tokens generieren</button>
+            <div class='row'>
+                <div class="col-md-12">
+                    <button class="btn btn-danger" id="generate_user_tokens">Tokens generieren</button>
+                    <button class="btn btn-danger" id="delete_user_tokens">Tokens löschen</button>
+                </div>
+            </div>
+            <hr>
+            <div class='row'>
+                <div class='col-md-12' style='max-width: 100%; overflow-x: auto;'>
+                    <table class='table narrow table-striped' style='width: unset; min-width: 100%;'>
+                    <thead id='head_tokens_here'></thead>
+                    <tbody id='tokens_here'>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script>
+    function refresh_tokens() {
+        api_call('/api/phishing_get_tokens', {}, function(data) {
+            console.log(data)
+            if (data.success) {
+                $('#tokens_here').empty();
+                $('#head_tokens_here').empty();
+                for (let entry of data.tokens) {
+                    let row = $('<tr>');
+                    // row.append($('<td>').text(moment(entry.date).format('ddd, D.M.Y')));
+                    row.append($('<td>').text(entry.token.token));
+                    if (entry.token.role == "sus") {
+                        row.append($('<td>').text("Schüler"));
+                    } else if (entry.token.role == "teacher") {
+                        row.append($('<td>').text("Lehrer"));
+                    } else {
+                        row.append($('<td>').text("Unbekannt (Fehler?)"));
+                    }
+
+                    if (entry.token.level == "unterstufe") {
+                        row.append($('<td>').text("5/6"));
+                    } else if (entry.token.level == "mittelstufe1") {
+                        row.append($('<td>').text("7/8"));
+                    } else if (entry.token.level == "mittelstufe2") {
+                        row.append($('<td>').text("9/10"));
+                    } else if (entry.token.level == "oberstufe") {
+                        row.append($('<td>').text("11/12"));
+                    } else if (entry.token.level == false) {
+                        row.append($('<td>').text(""));
+                    } else {
+                        row.append($('<td>').text("Unbekannt (Fehler?)"));
+                    }
+
+                    if (entry.token.clicked) {
+                        row.append($("<td>").html("<i class='text-danger fa fa-check'></i>"))
+                    } else {
+                        row.append($("<td>").html("<i class='text-success fa fa-times'></i>"))
+                    }
+
+                    if (entry.token.input1) {
+                        row.append($("<td>").html("<i class='text-danger fa fa-check'></i>"))
+                    } else {
+                        row.append($("<td>").html("<i class='text-success fa fa-times'></i>"))
+                    }
+
+                    if (entry.token.input2) {
+                        row.append($("<td>").html("<i class='text-danger fa fa-check'></i>"))
+                    } else {
+                        row.append($("<td>").html("<i class='text-success fa fa-times'></i>"))
+                    }
+
+                    let ps_delete = $('<button>').addClass('btn').addClass('btn-xs').addClass('btn-warning').html("<i class='fa fa-trash'></i>&nbsp;&nbsp;Löschen");
+                    ps_delete.data('token', entry.token.token);
+                    ps_delete.click(function(e) {
+                        api_call('/api/phishing_delete_token', {token: $(e.target).data('token')}, function(data) {
+                            if (data.success)
+                                refresh_tokens();
+                        });
+                    });
+                    row.append($('<td>').append(ps_delete))
+                    $('#tokens_here').append(row);
+                }
+                if ($('#tokens_here').html()) {
+                    let head_row = $('<tr>')
+                    // head_row.append($('<th>').text('Datum'))
+                    head_row.append($('<th>').text('Token'))
+                    head_row.append($('<th>').text('Rolle'))
+                    head_row.append($('<th>').text('Stufe'))
+                    head_row.append($('<th>').text('Link'))
+                    head_row.append($('<th>').text('E-Mail'))
+                    head_row.append($('<th>').text('Passwort'))
+                    head_row.append($('<th>').text('Löschen'))
+                    $('#head_tokens_here').append(head_row);
+                } else {
+                    $('#head_tokens_here').empty();
+                    $('#head_tokens_here').html("<i><div class='text-muted'>Keine Tokens ausgegeben!</div></i>");
+                }
+            }
+        });
+    }
+
 document.addEventListener('DOMContentLoaded', function () {
+    refresh_tokens();
     $('#generate_user_tokens').click(function(e) {
         api_call('/api/phishing_generate_user_tokens', function(data) {
             show_error_message("Test")
+        });
+    });
+    $('#delete_user_tokens').click(function(e) {
+        api_call('/api/phishing_delete_user_tokens', function(data) {
+        });
+    });
+    $('#delete_user_tokens').click(function(e) {
+        api_call('/api/phishing_get_info_user_token', function(data) {
         });
     });
 });

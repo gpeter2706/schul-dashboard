@@ -237,6 +237,7 @@ class SetupDatabase
         'MatrixAccessToken/access_token',
         'Message/key',
         'NewsEntry/timestamp',
+        'Phishing_Tokens/token',
         'Poll/key',
         'PollRun/key',
         'PresenceToken/token',
